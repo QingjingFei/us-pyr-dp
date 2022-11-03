@@ -1,2 +1,3 @@
-/ExcludeData/*
-temp/
+/ExcludeData/
+/temp*
+temp*
