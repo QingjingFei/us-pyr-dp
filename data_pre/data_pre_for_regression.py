@@ -32,7 +32,7 @@ def gen_dataset(src_folder, dst_folder):
                 ga = parse_info(srcPdir)['GA']
 
                 try:
-                    matchObj = re.match('(\d{2})w(\d)d', ga)
+                    matchObj = re.match('(\d{2})w([0-6])d', ga)
                     week = int(matchObj.group(1))
                     day = int(matchObj.group(2))
                 except AttributeError:
@@ -42,8 +42,7 @@ def gen_dataset(src_folder, dst_folder):
                     idxFalse += 1
                     print('ERROR!!!!!')
                     print('%s: GA out of index! ' % file_path)
-                    continue
-                if week <= 41 and day <= 6:
+                else:      # GA: 22w0d-41w6d
                     idx += 1
                     ga = round(week+day/7, 2)
                     file = str(idx) + '_' + str(pid) + '_' + str(ga) + '.png'
