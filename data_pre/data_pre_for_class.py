@@ -58,18 +58,18 @@ def gen_dataset(src_folder, dst_folder):
                 shutil.copyfile(file_path, dst_path)
 
     df = pd.DataFrame({'US_png': pngs, 'Class': classes})
-    df.to_csv(r'./us_GA.csv', index=False)
     
     return df
 
 
 if __name__ == '__main__':
     src_folder = r'/data/US-Image/masked_data_980x735,665'
-    dst_folder = r'../ExcludeData/dataset'
+    dst_folder = r'ExcludeData/dataset_masked,665'
     
     # make sure that dst_folder is empty.
     if os.path.exists(dst_folder):
         shutil.rmtree(dst_folder)
     os.makedirs(dst_folder)
 
-    gen_dataset(src_folder, dst_folder)
+    df = gen_dataset(src_folder, dst_folder)
+    df.to_csv(r'ExcludeData/GA_class,665.csv', index=False)

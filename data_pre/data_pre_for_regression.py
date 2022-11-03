@@ -55,8 +55,8 @@ def gen_dataset(src_folder, dst_folder):
 
 
 if __name__ == '__main__':
-    src_folder = r'/data/US-Image/fetal_lungs_png_origin_hz_980x735'
-    dst_folder = r'../ExcludeData/dataset_origin_ga'
+    src_folder = r'/data/US-Image/masked_data_980x735,665'
+    dst_folder = r'ExcludeData/dataset_masked_ga,665'
     
     # make sure that dst_folder is empty.
     if os.path.exists(dst_folder):
