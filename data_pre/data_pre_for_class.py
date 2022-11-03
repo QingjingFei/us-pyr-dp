@@ -10,9 +10,9 @@ def parse_info(patient_dir):
     return {'GA': ga}
 
 def gen_dataset(src_folder, dst_folder):
-    idx = 0
-    classes = []
-
+    pid, idx, idxFalse = 0, 0, 0
+    classes, pngs = [], []
+    
     for roomDir in sorted(os.listdir(src_folder)):
         if roomDir.startswith('.'):
             continue
@@ -23,6 +23,7 @@ def gen_dataset(src_folder, dst_folder):
                 continue
 
             srcPdir = os.path.join(srcRdir, patientDir)
+            pid += 1
             for file in sorted(os.listdir(srcPdir)):
                 if file.startswith('.'):
                     continue
@@ -37,32 +38,38 @@ def gen_dataset(src_folder, dst_folder):
                     day = int(matchObj.group(2))
                 except AttributeError:
                     print(ga)
-                idx += 1
-
-                if week <= 29 and day <= 6:
-                    classes.append(0)
-                elif week <= 36 and day <= 6:
-                    classes.append(1)
-                elif week <= 41 and day <= 6:
-                    classes.append(2)
-                else:
+                
+                # GA classification
+                if week < 20 or week > 41:
+                    idxFalse += 1
                     print('ERROR!!!!!')
                     print('%s: GA out of index! ' % file_path)
-                dst_path = os.path.join(dst_folder, str(idx) + '.png')
+                    continue
+                elif week <= 29 and day <= 6:   # 20w0d-29w6d
+                    classes.append(0)
+                elif week <= 36 and day <= 6:   # 30w0d-36w6d
+                    classes.append(1)
+                else:                           # 37w0d-41w6d
+                    classes.append(2)
+                idx += 1
+                filename = str(idx) + '_' + str(pid) + '_' + str(ga) + '.png'
+                pngs.append(filename)
+                dst_path = os.path.join(dst_folder, filename)
                 shutil.copyfile(file_path, dst_path)
-    pngs = [str(i+1) + '.png' for i in range(idx)]
+
     df = pd.DataFrame({'US_png': pngs, 'Class': classes})
     df.to_csv(r'./us_GA.csv', index=False)
     
     return df
 
 
-
-                
-
-
 if __name__ == '__main__':
-    src_folder = r'/data/US-Image/masked_data'
-    dst_folder = r'./dataset'
+    src_folder = r'/data/US-Image/masked_data_980x735,665'
+    dst_folder = r'../ExcludeData/dataset'
+    
+    # make sure that dst_folder is empty.
+    if os.path.exists(dst_folder):
+        shutil.rmtree(dst_folder)
+    os.makedirs(dst_folder)
 
     gen_dataset(src_folder, dst_folder)

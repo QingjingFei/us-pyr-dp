@@ -10,9 +10,7 @@ def parse_info(patient_dir):
     return {'GA': ga}
 
 def gen_dataset(src_folder, dst_folder):
-    pid = 0
-    idx = 0
-    idxFalse = 0
+    pid, idx, idxFalse = 0, 0, 0
 
     for roomDir in sorted(os.listdir(src_folder)):
         if roomDir.startswith('.'):
@@ -58,6 +56,11 @@ def gen_dataset(src_folder, dst_folder):
 
 if __name__ == '__main__':
     src_folder = r'/data/US-Image/fetal_lungs_png_origin_hz_980x735'
-    dst_folder = r'./dataset_origin_ga'
+    dst_folder = r'../ExcludeData/dataset_origin_ga'
+    
+    # make sure that dst_folder is empty.
+    if os.path.exists(dst_folder):
+        shutil.rmtree(dst_folder)
+    os.makedirs(dst_folder)
 
     gen_dataset(src_folder, dst_folder)
